@@ -126,6 +126,20 @@ function App() {
   const [showInstallSheet, setShowInstallSheet] = useState(false)
   const [showIosTip, setShowIosTip] = useState(false)
   const [isAppInstalled, setIsAppInstalled] = useState(false)
+  const [zuluTime, setZuluTime] = useState('')
+
+  useEffect(() => {
+    const updateZuluTime = () => {
+      const now = new Date()
+      const hours = now.getUTCHours().toString().padStart(2, '0')
+      const minutes = now.getUTCMinutes().toString().padStart(2, '0')
+      setZuluTime(`${hours}:${minutes}Z`)
+    }
+
+    updateZuluTime()
+    const timer = window.setInterval(updateZuluTime, 1000)
+    return () => window.clearInterval(timer)
+  }, [])
 
   useEffect(() => {
     setIsAppInstalled(isStandalone())
@@ -296,6 +310,9 @@ function App() {
                 <p className="muted">{option.description}</p>
               </button>
             ))}
+          </div>
+          <div className="zulu-time" aria-live="polite">
+            <strong>{zuluTime}</strong>
           </div>
         </section>
       ) : (
